@@ -30,4 +30,12 @@ public class Reminder {
         this.content = content;
         this.date = date;
     }
+
+    public long getUser() {
+        return user;
+    }
+
+    public String getContent() {
+        return content;
+    }
 }
