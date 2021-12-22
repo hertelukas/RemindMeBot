@@ -20,6 +20,9 @@ public class ReminderService {
     }
 
     public List<Reminder> getCurrentTimers() {
-        return reminderRepository.getRemindersByDateBetween(Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf(LocalDateTime.now().plus(1, ChronoUnit.MINUTES)));
+        return reminderRepository.getRemindersByDateBetween(
+                Timestamp.valueOf(LocalDateTime.now().minus(1, ChronoUnit.MINUTES)),
+                Timestamp.valueOf(LocalDateTime.now())
+        );
     }
 }

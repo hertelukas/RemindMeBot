@@ -4,6 +4,7 @@ import com.example.remindmebot.database.Reminder;
 import com.example.remindmebot.database.ReminderService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -11,10 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,14 +22,14 @@ public class MainListener extends ListenerAdapter {
 
     static ReminderService reminderService;
 
-    private final List<Guild> guilds;
+    private final Set<Guild> guilds;
 
     private final List<CommandHandler> commandHandlers;
 
     public MainListener(ReminderService reminderService, CommandHandler... commandHandlers) {
         this.commandHandlers = Arrays.asList(commandHandlers);
         MainListener.reminderService = reminderService;
-        guilds = new ArrayList<>();
+        guilds = new HashSet<>();
 
         // Setup notifier
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -62,9 +60,10 @@ public class MainListener extends ListenerAdapter {
     }
 
     @Override
-    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        guilds.add(event.getGuild());
+    public void onReady(@NotNull ReadyEvent event) {
+        guilds.addAll(event.getJDA().getGuilds());
     }
+
 
     @Override
     public void onSlashCommand(@NotNull SlashCommandEvent event) {
