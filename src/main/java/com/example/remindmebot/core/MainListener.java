@@ -3,6 +3,7 @@ package com.example.remindmebot.core;
 import com.example.remindmebot.database.Reminder;
 import com.example.remindmebot.database.ReminderService;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -40,15 +41,13 @@ public class MainListener extends ListenerAdapter {
                 List<Reminder> reminders = reminderService.getCurrentTimers();
                 System.out.println("Got " + reminders.size() + " reminders");
                 for (Reminder reminder : reminders) {
-                    // TODO: 12/22/21 Don't send twice, delete database entry
                     for (Guild guild : guilds) {
                         try {
-                            Objects.requireNonNull(guild.getMemberById(reminder.getUser()))
-                                    .getUser()
-                                    .openPrivateChannel()
-                                    .queue(
-                                            (c) -> c.sendMessage(reminder.getContent()).queue() //Send the message
-                                    );
+                            User user = Objects.requireNonNull(guild.getMemberById(reminder.getUser())).getUser();
+                            user.openPrivateChannel().queue(
+                                    (c) -> c.sendMessage(reminder.getContent()).queue()
+                            );
+                            break;
                         } catch (NullPointerException ignored) {
                             System.out.println("Member not found");
                         }
