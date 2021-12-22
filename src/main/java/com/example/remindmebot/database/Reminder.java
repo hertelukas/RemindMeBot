@@ -12,6 +12,9 @@ public class Reminder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "user")
+    private long user;
+
     @Column(name = "content")
     private String content;
 
@@ -20,5 +23,11 @@ public class Reminder {
 
     public Reminder(){
 
+    }
+
+    public Reminder(long user, String content, Timestamp date){
+        this.user = user;
+        this.content = content;
+        this.date = date;
     }
 }
