@@ -22,7 +22,13 @@ public class Core {
                 GatewayIntent.GUILD_MESSAGES
         );
         JDA jda = JDABuilder.create(token, intents).addEventListeners(mainListener).build();
-        jda.upsertCommand("remind", "Create a new Reminder").queue();
+
+        // TODO: 12/22/21 Create global Command
+        try {
+            jda.awaitReady().getGuildById("725998620284944394").upsertCommand("remind", "Create a reminder").queue();
+        }catch (Exception e){
+            System.out.println(e);
+        }
         return jda;
     }
 }
