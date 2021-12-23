@@ -24,12 +24,9 @@ public class Core {
         );
         JDA jda = JDABuilder.create(token, intents).addEventListeners(mainListener).build();
 
-
-        // TODO: 12/22/21 Create global Command
         try {
-            jda.awaitReady().getGuildById(725998620284944394L)
-                    .upsertCommand("remind", "Create a reminder")
-                    .addOption(OptionType.STRING, "date" , "dd.MM.yyyy HH:mm", true)
+            jda.upsertCommand("remind", "Create a new reminder")
+                    .addOption(OptionType.STRING, "date", "dd.MM.yyyy HH:mm", true)
                     .addOption(OptionType.STRING, "content", "Content of your reminder", true)
                     .queue();
         } catch (Exception e) {
