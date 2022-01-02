@@ -1,17 +1,16 @@
 package com.example.remindmebot.core;
 
+import com.example.remindmebot.core.commands.CommandHandler;
 import com.example.remindmebot.database.Reminder;
 import com.example.remindmebot.database.ReminderService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,22 +32,19 @@ public class MainListener extends ListenerAdapter {
 
         // Setup notifier
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                List<Reminder> reminders = reminderService.getCurrentTimers();
-                System.out.println("Got " + reminders.size() + " reminders");
-                for (Reminder reminder : reminders) {
-                    for (Guild guild : guilds) {
-                        try {
-                            User user = Objects.requireNonNull(guild.getMemberById(reminder.getUser())).getUser();
-                            user.openPrivateChannel().queue(
-                                    (c) -> c.sendMessage(reminder.getContent()).queue()
-                            );
-                            break;
-                        } catch (NullPointerException ignored) {
-                            System.out.println("Member not found");
-                        }
+        scheduler.scheduleAtFixedRate(() -> {
+            List<Reminder> reminders = reminderService.getCurrentTimers();
+            System.out.println("Got " + reminders.size() + " reminders");
+            for (Reminder reminder : reminders) {
+                for (Guild guild : guilds) {
+                    try {
+                        User user = Objects.requireNonNull(guild.getMemberById(reminder.getUser())).getUser();
+                        user.openPrivateChannel().queue(
+                                (c) -> c.sendMessage(reminder.getContent()).queue()
+                        );
+                        break;
+                    } catch (NullPointerException ignored) {
+                        System.out.println("Member not found");
                     }
                 }
             }

@@ -1,22 +1,26 @@
 package com.example.remindmebot.core.handler;
 
-import com.example.remindmebot.core.CommandHandler;
+import com.example.remindmebot.core.commands.CommandHandler;
 import com.example.remindmebot.core.MainListener;
+import com.example.remindmebot.core.commands.Option;
 import com.example.remindmebot.database.Reminder;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
 public class HandleReminder extends CommandHandler {
 
     private HandleReminder() {
-        setName("remind");
+        super("remind", "Create a new reminder", true, options());
     }
 
     @Override
@@ -56,5 +60,12 @@ public class HandleReminder extends CommandHandler {
 
         event.reply("Reminder saved!").setEphemeral(true).queue();
         return true;
+    }
+
+    private static List<Option> options() {
+        List<Option> result = new ArrayList<>();
+        result.add(new Option(OptionType.STRING, "date", "dd.MM.yyyy HH:mm", true));
+        result.add(new Option(OptionType.STRING, "content", "Content of your reminder", true));
+        return result;
     }
 }
