@@ -6,6 +6,7 @@ import com.example.remindmebot.database.ReminderService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -57,9 +58,15 @@ public class MainListener extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
+        super.onReady(event);
         guilds.addAll(event.getJDA().getGuilds());
     }
 
+    @Override
+    public void onGuildJoin(@NotNull GuildJoinEvent event) {
+        super.onGuildJoin(event);
+        guilds.add(event.getGuild());
+    }
 
     @Override
     public void onSlashCommand(@NotNull SlashCommandEvent event) {
