@@ -96,7 +96,6 @@ public class HandleReminder extends CommandHandler {
             reply.append(minutes).append(" minutes.");
         }
 
-        System.out.println(reply);
         return reply.toString();
     }
 

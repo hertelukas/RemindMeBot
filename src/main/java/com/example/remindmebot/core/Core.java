@@ -30,6 +30,7 @@ public class Core {
         );
         JDA jda = JDABuilder.create(token, intents).addEventListeners(mainListener).build();
 
+        jda.updateCommands().queue();
 
         try {
             for (CommandHandler cmd : commandHandlers) {
