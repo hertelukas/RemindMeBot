@@ -26,7 +26,8 @@ public class Core {
     @Bean
     public JDA login(MainListener mainListener, CommandHandler... commandHandlers) throws LoginException {
         EnumSet<GatewayIntent> intents = EnumSet.of(
-                GatewayIntent.GUILD_MESSAGES
+                GatewayIntent.GUILD_MESSAGES,
+                GatewayIntent.GUILD_MEMBERS
         );
         JDA jda = JDABuilder.create(token, intents).addEventListeners(mainListener).build();
 
